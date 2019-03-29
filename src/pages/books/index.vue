@@ -1,35 +1,20 @@
 <template>
   <div class="booksContainer">
     <swiper indicator-dots>
-    <swiper-item>
-      <img src="../../../static/imgs/firstView/1.jpg" alt="">
+    <swiper-item v-for="(item,index) in swiperList" :key="index" >
+      <img :src="item.image" alt="">
     </swiper-item>
     </swiper>
-    <div id="AllBooks">
+    <div class="AllBooks">
       <div class="nav">
         <span class="all">全部商品</span>
-        <span class="more"> > </span>
+        <span class="more" @click="toBookList"> > </span>
       </div>
       <ul class="booksList">
-        <li class="bookItem">
-          <img src="../../../static/imgs/firstView/1.jpg" alt="">
-          <p class="bookName">Angelababy</p>
-          <p class="bookDir">Angelababy</p>
-        </li>
-        <li>
-          <img src="../../../static/imgs/firstView/2.jpg" alt="">
-          <p>Angelababy</p>
-          <p>Angelababy</p>
-        </li>
-        <li>
-          <img src="../../../static/imgs/firstView/3.jpg" alt="">
-          <p>Angelababy</p>
-          <p>Angelababy</p>
-        </li>
-        <li>
-          <img src="../../../static/imgs/firstView/nvsheng.jpg" alt="">
-          <p>Angelababy</p>
-          <p>Angelababy</p>
+        <li class="bookItem" v-for="(item,index) in datas" :key="index" @click="toDetail(item)">
+          <img :src="item.image" alt="">
+          <p class="bookName">{{item.title}}</p>
+          <p class="bookDir">{{item.author}}</p>
         </li>
       </ul>
     </div>
@@ -38,27 +23,58 @@
 </template>
 
 <script>
-  export default {}
+  import datas from './datas/data.json'
+  export default {
+      data(){
+        return{
+          datas:[]
+        }
+      },
+      mounted(){
+        this.datas=datas
+      },
+      computed:{
+        swiperList(){
+          return [...this.datas].splice(0,4)
+        }
+      },
+      methods:{
+        toDetail(item){
+          console.log(item);
+          wx.navigateTo({
+            url:'/pages/detail/main?book='+JSON.stringify(item)
+          })
+        },
+        toBookList(){
+          wx.navigateTo({
+            url:'/pages/bookList/main'
+          })
+        }
+      }
+  }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  #booksContainer
+  .booksContainer
+    width 100%
     swiper
       width 100%
       height 400rpx
       img
         height 100%
         width 100%
-    #AllBooks
+    .AllBooks
+      width 100%
       .nav
         padding 10rpx
-      .more
-        float right
-        width 80rpx
-        height 100%
-        text-align right
-        color #02a774
+        .more
+          float right
+          width 80rpx
+          height 100%
+          text-align right
+          color #02a774
       .booksList
+        width 100%
         display flex
         flex-wrap wrap
         .bookItem

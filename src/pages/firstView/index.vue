@@ -31,8 +31,8 @@
         this.current=event.mp.detail.current
       },
       handleBook(){
-        wx.navigateTo({
-
+        wx.switchTab({
+          url:"/pages/books/main"
         })
       }
     }
